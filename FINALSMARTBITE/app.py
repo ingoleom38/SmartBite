@@ -44,13 +44,10 @@ import json
 import os
 import random
 import re
-import smtplib
 import string
 from datetime import date, datetime, timedelta
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 from functools import wraps
-
+import requests
 import MySQLdb
 from dotenv import load_dotenv
 from flask import Flask, current_app, flash, redirect, render_template, request, session, url_for
@@ -70,22 +67,14 @@ app.config["MYSQL_HOST"] = os.environ.get("MYSQL_HOST", "")
 app.config["MYSQL_USER"] = os.environ.get("MYSQL_USER", "")
 app.config["MYSQL_PASSWORD"] = os.environ.get("MYSQL_PASSWORD", "")
 app.config["MYSQL_DB"] = os.environ.get("MYSQL_DB", "")
-app.config["MYSQL_PORT"] = int(os.environ.get("MYSQL_PORT", "3306"))
 app.config["MYSQL_CURSORCLASS"] = "DictCursor"  # rows come back as dicts
-
-# Managed MySQL hosts (Aiven, PlanetScale, etc.) require SSL. If a CA
-# certificate file is present (ca.pem in the project root, or a path given
-# via MYSQL_SSL_CA), tell mysqlclient to use it. Locally against a plain
-# MySQL install with no SSL cert, this block is simply skipped.
-_ssl_ca_path = os.environ.get("MYSQL_SSL_CA", os.path.join(os.path.dirname(os.path.abspath(__file__)), "ca.pem"))
-if os.path.exists(_ssl_ca_path):
-    app.config["MYSQL_CUSTOM_OPTIONS"] = {"ssl": {"ca": _ssl_ca_path}}
 
 # Gmail SMTP, for the forgot-password OTP (see the Email section below).
 # MAIL_PASSWORD must be a Gmail App Password (myaccount.google.com/apppasswords
 # with 2-Step Verification turned on), not your normal Gmail login password.
-app.config["MAIL_USERNAME"] = os.environ.get("MAIL_USERNAME", "")
-app.config["MAIL_PASSWORD"] = os.environ.get("MAIL_PASSWORD", "")
+app.config["BREVO_API_KEY"] = os.environ.get("BREVO_API_KEY", "")
+app.config["MAIL_SENDER_EMAIL"] = os.environ.get("MAIL_SENDER_EMAIL", "")
+app.config["MAIL_SENDER_NAME"] = os.environ.get("MAIL_SENDER_NAME", "SmartBite")
 
 OTP_EXPIRY_MINUTES = 5
 
@@ -2345,14 +2334,14 @@ def get_bot_reply(message, student=None, month_spent=None, student_id=None):
     return reply
 
 # =======================================================================
-# 12. Email (Gmail SMTP OTP delivery)
+# 12. Email (Brevo API OTP delivery)
 # =======================================================================
-SMTP_HOST = "smtp.gmail.com"
-SMTP_PORT = 587
+BREVO_API_URL = "https://api.brevo.com/v3/smtp/email"
 OTP_EXPIRY_MINUTES = 5
 
 
-def _build_message(sender, to_email, otp):
+def _build_email_content(otp):
+    """Returns (subject, plain_text, html) for the OTP email."""
     subject = "Your SmartBite password reset code"
 
     plain = (
@@ -2379,31 +2368,46 @@ def _build_message(sender, to_email, otp):
   <div style="padding:16px 32px;border-top:1px solid #DED5B9;font-size:12px;color:#4B5245;text-align:center;">&copy; 2026 SmartBite</div>
 </div></body></html>"""
 
-    msg = MIMEMultipart("alternative")
-    msg["Subject"] = subject
-    msg["From"] = f"SmartBite <{sender}>"
-    msg["To"] = to_email
-    msg.attach(MIMEText(plain, "plain"))
-    msg.attach(MIMEText(html, "html"))
-    return msg
+    return subject, plain, html
+
+
+class BrevoEmailError(Exception):
+    """Raised when Brevo rejects or fails to send the OTP email."""
 
 
 def send_otp_email(to_email, otp):
-    """Send the 6-digit OTP to to_email using the Gmail account configured
-    in app.config. Raises the underlying smtplib exception on failure so
-    the caller can show a specific error (e.g. bad credentials)."""
-    sender = current_app.config["MAIL_USERNAME"]
-    app_password = current_app.config["MAIL_PASSWORD"]
+    """Send the 6-digit OTP to to_email via Brevo's transactional email
+    API. Raises BrevoEmailError on failure so the caller can show a
+    specific message."""
+    api_key = current_app.config["BREVO_API_KEY"]
+    sender_email = current_app.config["MAIL_SENDER_EMAIL"]
+    sender_name = current_app.config["MAIL_SENDER_NAME"]
 
-    msg = _build_message(sender, to_email, otp)
+    if not api_key or not sender_email:
+        raise BrevoEmailError("Email is not configured (missing BREVO_API_KEY or MAIL_SENDER_EMAIL).")
 
-    with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
-        server.ehlo()
-        server.starttls()
-        server.ehlo()
-        server.login(sender, app_password)
-        server.sendmail(sender, [to_email], msg.as_string())
+    subject, plain, html = _build_email_content(otp)
 
+    payload = {
+        "sender": {"name": sender_name, "email": sender_email},
+        "to": [{"email": to_email}],
+        "subject": subject,
+        "htmlContent": html,
+        "textContent": plain,
+    }
+    headers = {
+        "accept": "application/json",
+        "api-key": api_key,
+        "content-type": "application/json",
+    }
+
+    try:
+        response = requests.post(BREVO_API_URL, json=payload, headers=headers, timeout=10)
+    except requests.RequestException as e:
+        raise BrevoEmailError(f"Could not reach Brevo: {e}") from e
+
+    if response.status_code not in (200, 201):
+        raise BrevoEmailError(f"Brevo rejected the email (status {response.status_code}): {response.text}")
 # =======================================================================
 # Shared chatbot helpers (used by dashboard, widget and full-page routes)
 # =======================================================================
@@ -2681,13 +2685,8 @@ def forgot_password():
     try:
         send_otp_email(email, otp)
         flash("OTP sent! Check your inbox (and spam folder).")
-    except smtplib.SMTPAuthenticationError:
-        flash("Gmail authentication failed. Check MAIL_USERNAME and MAIL_PASSWORD in "
-              "your .env file, MAIL_PASSWORD must be a Gmail App Password from "
-              "myaccount.google.com/apppasswords.")
-        return redirect(url_for("forgot_password"))
-    except smtplib.SMTPException as e:
-        flash(f"SMTP error: {e}")
+    except BrevoEmailError as e:
+        flash(f"Email error: {e}")
         return redirect(url_for("forgot_password"))
     except Exception as e:
         flash(f"Mail error: {type(e).__name__}: {e}")
