@@ -106,6 +106,11 @@ table.data-table tr:last-child td { border-bottom: none; }
 .grocery-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--line-soft); font-size: 13.5px; }
 .grocery-item:last-child { border-bottom: none; }
 
+@media (max-width: 1180px) {
+  .sidebar { width: 216px; }
+  .page-body { padding: 24px 24px 50px; }
+}
+
 @media (max-width: 1000px) {
   .stat-cards { grid-template-columns: 1fr 1fr; }
   .dash-grid { grid-template-columns: 1fr; }
