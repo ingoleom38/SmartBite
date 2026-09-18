@@ -67,7 +67,8 @@ app.config["MYSQL_HOST"] = os.environ.get("MYSQL_HOST", "")
 app.config["MYSQL_USER"] = os.environ.get("MYSQL_USER", "")
 app.config["MYSQL_PASSWORD"] = os.environ.get("MYSQL_PASSWORD", "")
 app.config["MYSQL_DB"] = os.environ.get("MYSQL_DB", "")
-app.config["MYSQL_CURSORCLASS"] = "DictCursor"  # rows come back as dicts
+app.config["MYSQL_PORT"] = int(os.environ.get("MYSQL_PORT", "3306"))
+app.config["MYSQL_CURSORCLASS"] = "DictCursor"
 
 _ssl_ca_path = os.environ.get("MYSQL_SSL_CA", os.path.join(os.path.dirname(os.path.abspath(__file__)), "ca.pem"))
 if os.path.exists(_ssl_ca_path):
