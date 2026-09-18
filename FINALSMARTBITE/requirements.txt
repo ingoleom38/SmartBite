@@ -5,3 +5,4 @@ python-dotenv==1.0.1
 Werkzeug==3.0.3
 openai==1.51.0
 gunicorn==22.0.0
+requests==2.32.3
