@@ -69,6 +69,10 @@ app.config["MYSQL_PASSWORD"] = os.environ.get("MYSQL_PASSWORD", "")
 app.config["MYSQL_DB"] = os.environ.get("MYSQL_DB", "")
 app.config["MYSQL_CURSORCLASS"] = "DictCursor"  # rows come back as dicts
 
+_ssl_ca_path = os.environ.get("MYSQL_SSL_CA", os.path.join(os.path.dirname(os.path.abspath(__file__)), "ca.pem"))
+if os.path.exists(_ssl_ca_path):
+    app.config["MYSQL_CUSTOM_OPTIONS"] = {"ssl": {"ca": _ssl_ca_path}}
+  
 # Gmail SMTP, for the forgot-password OTP (see the Email section below).
 # MAIL_PASSWORD must be a Gmail App Password (myaccount.google.com/apppasswords
 # with 2-Step Verification turned on), not your normal Gmail login password.
