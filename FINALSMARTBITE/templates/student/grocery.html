@@ -1,0 +1,57 @@
+{% extends "student/base.html" %}
+{% block title %}Grocery Planner — SmartBite{% endblock %}
+{% block page_title %}Grocery Planner{% endblock %}
+{% block page_sub %}Turn a budget into a practical shopping list.{% endblock %}
+{% block content %}
+
+<div class="dash-grid">
+  <div class="card">
+    <h3 style="margin-bottom:16px;">List settings</h3>
+    <form method="POST" action="{{ url_for('grocery') }}">
+      <div class="field">
+        <label for="budget">Budget (₹, optional)</label>
+        <input id="budget" type="number" step="1" name="budget" value="{{ params.budget or '' }}" placeholder="e.g. 500">
+      </div>
+      <div class="field">
+        <label for="days">For how many days</label>
+        <select id="days" name="days">
+          <option value="7" {{ 'selected' if params.days == 7 }}>1 week</option>
+          <option value="14" {{ 'selected' if params.days == 14 }}>2 weeks</option>
+          <option value="30" {{ 'selected' if params.days == 30 }}>1 month</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="diet">Diet</label>
+        <select id="diet" name="diet">
+          <option value="" {{ 'selected' if not params.diet }}>No preference</option>
+          <option value="veg" {{ 'selected' if params.diet == 'veg' }}>Vegetarian</option>
+        </select>
+      </div>
+      <div class="checkbox-row">
+        <input type="checkbox" id="high_protein" name="high_protein" {{ 'checked' if params.high_protein }}>
+        <label for="high_protein" style="margin:0;">Prioritize high-protein items</label>
+      </div>
+      <button class="btn btn-primary btn-block" type="submit">Build my list</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-bottom:14px;">Your list</h3>
+    {% if grocery_list %}
+      <div class="row-list">
+        {% for item in grocery_list['items'] %}
+          <div class="grocery-item">
+            <div><strong>{{ item.item }}</strong> — {{ item.qty }}<div style="font-size:12px;color:var(--ink-faint);">{{ item.note }}</div></div>
+            <div class="ri-amount">₹{{ item.cost }}</div>
+          </div>
+        {% endfor %}
+      </div>
+      <p style="font-size:14px;font-weight:700;margin-top:14px;">Total: ₹{{ grocery_list.total }}{% if grocery_list.budget %} of ₹{{ grocery_list.budget }} budget{% endif %}</p>
+      <p style="font-size:12px;color:var(--ink-faint);margin-top:6px;">Prices are rough estimates for hostel/local kirana shopping.</p>
+    {% else %}
+      <div class="empty-state">Build a list to see it here.</div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

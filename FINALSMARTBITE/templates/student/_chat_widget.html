@@ -1,0 +1,42 @@
+<div class="chat-widget">
+  {% if not session.chat_widget_open %}
+    <a class="chat-fab" href="{{ url_for('chat_widget_open', next=request.path) }}" aria-label="Open SmartBite AI">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v12H8l-4 4z"/></svg>
+    </a>
+  {% else %}
+    <div class="chat-popup">
+      <div class="chat-popup-head">
+        <span>🍊 SmartBite AI</span>
+        <a class="chat-popup-close" href="{{ url_for('chat_widget_close', next=request.path) }}" aria-label="Close chat">&times;</a>
+      </div>
+      <div class="chat-popup-log">
+        {% if widget_messages %}
+          {% for msg in widget_messages %}
+            <div class="chat-row {{ msg.sender }}">
+              <div class="chat-bubble {{ msg.sender }}">{{ msg.message }}</div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <p class="chat-empty">Ask me anything about budget meals, protein or your spending.</p>
+        {% endif %}
+      </div>
+      <div class="chat-popup-quick">
+        {% for icon, label, prompt in widget_quick_actions %}
+          <form method="POST" action="{{ url_for('chat_widget_send') }}">
+            <input type="hidden" name="next" value="{{ request.path }}">
+            <input type="hidden" name="message" value="{{ prompt }}">
+            <button class="chip" type="submit"><span>{{ icon }}</span>{{ label }}</button>
+          </form>
+        {% endfor %}
+      </div>
+      <form class="chat-popup-form" method="POST" action="{{ url_for('chat_widget_send') }}">
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <input type="text" name="message" placeholder="Type a message" maxlength="500" required autocomplete="off">
+        <button type="submit" aria-label="Send">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 11l18-8-8 18-2-8-8-2z"/></svg>
+        </button>
+      </form>
+      <a class="chat-popup-expand" href="{{ url_for('chatbot_page') }}">Open full chat history</a>
+    </div>
+  {% endif %}
+</div>

@@ -1,0 +1,48 @@
+{% extends "student/base.html" %}
+{% block title %}Nutrition History — SmartBite{% endblock %}
+{% block page_title %}Nutrition History{% endblock %}
+{% block page_sub %}Every calculation you've logged, most recent first.{% endblock %}
+{% block content %}
+
+<div class="card">
+  {% if logs %}
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Date</th><th>Calories</th><th>Protein</th><th>Carbs</th><th>Fat</th><th>Weight</th><th>Activity</th></tr></thead>
+        <tbody>
+          {% for log in logs %}
+            <tr>
+              <td>{{ log.created_at }}</td>
+              <td>{{ log.calories }} kcal</td>
+              <td>{{ log.protein_g }}g</td>
+              <td>{{ log.carbs_g }}g</td>
+              <td>{{ log.fat_g }}g</td>
+              <td>{{ log.weight_kg }} kg</td>
+              <td>{{ log.activity_level }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="empty-state">No nutrition calculations yet. <a href="{{ url_for('nutrition') }}">Calculate your target →</a></div>
+  {% endif %}
+</div>
+
+{% if monthly_nutrition %}
+<div class="card" style="margin-top:20px;">
+  <h3 style="margin-bottom:14px;">Monthly averages</h3>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead><tr><th>Month</th><th>Entries</th><th>Avg calories</th><th>Avg protein</th></tr></thead>
+      <tbody>
+        {% for row in monthly_nutrition %}
+          <tr><td>{{ row.month }}</td><td>{{ row.entries }}</td><td>{{ row.avg_calories }} kcal</td><td>{{ row.avg_protein }}g</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}

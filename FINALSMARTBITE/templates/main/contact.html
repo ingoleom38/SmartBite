@@ -1,0 +1,35 @@
+{% extends "main/base.html" %}
+{% block title %}Contact — SmartBite{% endblock %}
+{% block content %}
+<section class="simple-page">
+  <div class="wrap">
+    <span class="kicker">Get in touch</span>
+    <h1>Contact the SmartBite team</h1>
+    <p class="lede">Questions, feedback or bug reports, this is a student project, the team reads everything.</p>
+
+    <div class="contact-grid">
+      <div class="card">
+        <h3 style="margin-bottom:16px;">Send a message</h3>
+        <form method="POST" action="{{ url_for('contact') }}">
+          <div class="field-row">
+            <div class="field"><label for="name">Name</label><input id="name" name="name" required></div>
+            <div class="field"><label for="email">Email</label><input id="email" type="email" name="email" required></div>
+          </div>
+          <div class="field"><label for="message">Message</label><textarea id="message" name="message" rows="5" required></textarea></div>
+          <button class="btn btn-primary btn-block" type="submit">Send message</button>
+        </form>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom:14px;">Project team</h3>
+        <div class="row-list">
+          <div class="row-item"><div class="ri-main">Guide</div><div class="ri-sub">Samadhan Mandpe</div></div>
+          <div class="row-item"><div class="ri-main">Vedant Sonune</div><div class="ri-sub">Team member</div></div>
+          <div class="row-item"><div class="ri-main">Gulshan Nimbarte</div><div class="ri-sub">Team member</div></div>
+          <div class="row-item"><div class="ri-main">Om Ingole</div><div class="ri-sub">Team member</div></div>
+          <div class="row-item"><div class="ri-main">Krupa Bawankar</div><div class="ri-sub">Team member</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

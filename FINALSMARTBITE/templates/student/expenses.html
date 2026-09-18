@@ -1,0 +1,65 @@
+{% extends "student/base.html" %}
+{% block title %}Expenses — SmartBite{% endblock %}
+{% block page_title %}Expenses{% endblock %}
+{% block page_sub %}Spent ₹{{ "%.0f"|format(month_spent) }} so far this month.{% endblock %}
+{% block content %}
+
+<div class="dash-grid">
+  <div>
+    <div class="card" style="margin-bottom:20px;">
+      <h3 style="margin-bottom:16px;">Add an expense</h3>
+      <form method="POST" action="{{ url_for('expenses') }}">
+        <div class="form-grid-2">
+          <div class="field"><label for="amount">Amount (₹)</label><input id="amount" type="number" step="0.01" name="amount" min="0.01" required></div>
+          <div class="field"><label for="category">Category</label>
+            <select id="category" name="category">
+              <option>Mess</option><option>Canteen</option><option>Groceries</option>
+              <option>Eating out</option><option>Snacks</option><option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-grid-2">
+          <div class="field"><label for="expense_date">Date</label><input id="expense_date" type="date" name="expense_date" value="{{ today }}"></div>
+          <div class="field"><label for="note">Note (optional)</label><input id="note" name="note" placeholder="e.g. mess bill"></div>
+        </div>
+        <button class="btn btn-primary" type="submit">Add expense</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-bottom:14px;">Recent expenses</h3>
+      {% if recent %}
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Date</th><th>Category</th><th>Note</th><th>Amount</th></tr></thead>
+            <tbody>
+              {% for e in recent %}
+                <tr><td>{{ e.expense_date }}</td><td>{{ e.category }}</td><td>{{ e.note or '—' }}</td><td>₹{{ "%.0f"|format(e.amount) }}</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="empty-state">No expenses logged yet.</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-bottom:14px;">Monthly totals</h3>
+    {% if monthly_expenses %}
+      <div class="row-list">
+        {% for row in monthly_expenses %}
+          <div class="row-item"><div class="ri-main">{{ row.month }}</div><div class="ri-amount">₹{{ "%.0f"|format(row.total) }}</div></div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">No history yet.</div>
+    {% endif %}
+    {% if daily_budget %}
+      <p style="font-size:12.5px;color:var(--ink-faint);margin-top:14px;">Daily budget: ₹{{ "%.0f"|format(daily_budget) }}. <a href="{{ url_for('budget') }}" style="color:var(--orange-light);">See full budget breakdown →</a></p>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends "student/base.html" %}
+{% block title %}My Profile — SmartBite{% endblock %}
+{% block page_title %}My Profile{% endblock %}
+{% block page_sub %}Keep your details current so targets and plans stay accurate.{% endblock %}
+{% block content %}
+
+<div class="dash-grid">
+  <div class="card">
+    <h3 style="margin-bottom:16px;">Profile details</h3>
+    <form method="POST" action="{{ url_for('profile') }}">
+      <input type="hidden" name="form" value="profile">
+      <div class="field-row">
+        <div class="field"><label for="full_name">Full name</label><input id="full_name" name="full_name" value="{{ student.full_name }}" required></div>
+        <div class="field"><label for="gender">Gender</label>
+          <select id="gender" name="gender">
+            <option value="male" {{ 'selected' if student.gender == 'male' }}>Male</option>
+            <option value="female" {{ 'selected' if student.gender == 'female' }}>Female</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="age">Age</label><input id="age" type="number" name="age" min="14" max="60" value="{{ student.age }}" required></div>
+        <div class="field"><label for="height">Height (cm)</label><input id="height" type="number" step="0.1" name="height" min="120" max="220" value="{{ student.height_cm }}" required></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="weight">Weight (kg)</label><input id="weight" type="number" step="0.1" name="weight" min="30" max="150" value="{{ student.weight_kg }}" required></div>
+        <div class="field"><label for="daily_budget">Daily food budget (₹)</label><input id="daily_budget" type="number" step="1" name="daily_budget" value="{{ student.daily_budget or '' }}"></div>
+      </div>
+      <div class="field">
+        <label for="diet_preference">Diet preference</label>
+        <select id="diet_preference" name="diet_preference">
+          <option value="" {{ 'selected' if not student.diet_preference }}>Not set</option>
+          <option value="veg" {{ 'selected' if student.diet_preference == 'veg' }}>Vegetarian</option>
+          <option value="nonveg" {{ 'selected' if student.diet_preference == 'nonveg' }}>Non-vegetarian</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" type="submit">Save changes</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-bottom:16px;">Change password</h3>
+    <form method="POST" action="{{ url_for('profile') }}">
+      <input type="hidden" name="form" value="password">
+      <div class="field"><label for="current_password">Current password</label><input id="current_password" type="password" name="current_password" required></div>
+      <div class="field"><label for="new_password">New password</label><input id="new_password" type="password" name="new_password" minlength="6" required></div>
+      <div class="field"><label for="confirm_new_password">Confirm new password</label><input id="confirm_new_password" type="password" name="confirm_new_password" minlength="6" required></div>
+      <button class="btn btn-ghost" type="submit">Update password</button>
+    </form>
+
+    <h3 style="margin:28px 0 16px;">Account</h3>
+    <div class="row-list">
+      <div class="row-item"><div class="ri-main">Email</div><div class="ri-sub">{{ student.email }}</div></div>
+      <div class="row-item"><div class="ri-main">Member since</div><div class="ri-sub">{{ student.created_at }}</div></div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

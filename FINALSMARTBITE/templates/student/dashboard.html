@@ -1,0 +1,108 @@
+{% extends "student/base.html" %}
+{% block title %}Dashboard — SmartBite{% endblock %}
+{% block page_title %}Good {{ greeting_time }}, {{ first_name }} 👋{% endblock %}
+{% block page_sub %}Here's where things stand today.{% endblock %}
+
+{% block content %}
+
+<div class="stat-cards">
+  <div class="card stat-card">
+    <div class="stat-top"><span class="stat-label">Calorie Target</span><span class="stat-icon">🔥</span></div>
+    {% if nutrition %}
+      <div class="stat-value">{{ nutrition.calories }} kcal</div>
+      <div class="stat-sub">From your latest calculation</div>
+    {% else %}
+      <div class="stat-value">—</div>
+      <div class="stat-sub"><a href="{{ url_for('nutrition') }}" style="color:var(--orange-light);">Calculate your target →</a></div>
+    {% endif %}
+  </div>
+  <div class="card stat-card">
+    <div class="stat-top"><span class="stat-label">Protein Target</span><span class="stat-icon">🥚</span></div>
+    {% if nutrition %}
+      <div class="stat-value">{{ nutrition.protein_g }}g</div>
+      <div class="stat-sub">Per day</div>
+    {% else %}
+      <div class="stat-value">—</div>
+      <div class="stat-sub">No calculation yet</div>
+    {% endif %}
+  </div>
+  <div class="card stat-card">
+    <div class="stat-top"><span class="stat-label">Monthly Budget</span><span class="stat-icon">💰</span></div>
+    {% if budget %}
+      <div class="stat-value">₹{{ "%.0f"|format(budget.month_budget) }}</div>
+      <div class="stat-sub">₹{{ "%.0f"|format(budget.daily_budget) }}/day</div>
+    {% else %}
+      <div class="stat-value">—</div>
+      <div class="stat-sub"><a href="{{ url_for('profile') }}" style="color:var(--orange-light);">Set a daily budget →</a></div>
+    {% endif %}
+  </div>
+  <div class="card stat-card">
+    <div class="stat-top"><span class="stat-label">Remaining Budget</span><span class="stat-icon">📉</span></div>
+    {% if budget %}
+      <div class="stat-value" style="color:{{ 'var(--bad)' if budget.over_budget else 'var(--ink)' }};">₹{{ "%.0f"|format(budget.remaining) }}</div>
+      <div class="stat-sub">{{ budget.days_left }} days left this month</div>
+    {% else %}
+      <div class="stat-value">—</div>
+      <div class="stat-sub">Set a budget to see this</div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="dash-grid">
+  <div>
+    <div class="card" style="margin-bottom:20px;">
+      <div class="panel-title"><h3>Budget overview</h3><a href="{{ url_for('budget') }}">View budget →</a></div>
+      {% if budget %}
+        <div class="cat-bar-row">
+          <div class="cat-bar-head"><span>Spent this month</span><span class="cat-amt">₹{{ "%.0f"|format(budget.month_total) }} / ₹{{ "%.0f"|format(budget.month_budget) }}</span></div>
+          <div class="progress-track"><div class="progress-fill {{ 'bad' if budget.over_budget }}" style="width:{{ [(budget.month_total / budget.month_budget * 100) if budget.month_budget else 0, 100]|min }}%"></div></div>
+        </div>
+        <p style="font-size:13px;color:var(--ink-soft);">
+          Averaging ₹{{ "%.0f"|format(budget.avg_per_day) }}/day so far.
+          {% if budget.projected_over %}At this pace you're projected to go over budget by month end.{% else %}You're on track to stay within budget.{% endif %}
+        </p>
+      {% else %}
+        <div class="empty-state">No daily budget set yet. <a href="{{ url_for('profile') }}">Set one on your profile</a>.</div>
+      {% endif %}
+    </div>
+
+    <div class="card">
+      <div class="panel-title"><h3>Recent expenses</h3><a href="{{ url_for('expenses') }}">View all →</a></div>
+      {% if recent_expenses %}
+        <div class="row-list">
+          {% for e in recent_expenses %}
+            <div class="row-item">
+              <div><div class="ri-main">{{ e.category }}</div><div class="ri-sub">{{ e.expense_date }}{{ ' · ' + e.note if e.note }}</div></div>
+              <div class="ri-amount">₹{{ "%.0f"|format(e.amount) }}</div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-state">No expenses logged yet. <a href="{{ url_for('expenses') }}">Add your first one</a>.</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div>
+    <div class="card ai-box" style="margin-bottom:20px;">
+      <div class="ai-head"><span class="ai-avatar">🤖</span><strong>AI Recommendation</strong></div>
+      <p>{{ ai_tip }}</p>
+      <a class="btn btn-soft btn-sm" style="margin-top:14px;" href="{{ url_for('chatbot_page') }}">Ask SmartBite AI</a>
+    </div>
+
+    <div class="card">
+      <div class="panel-title"><h3>Quick actions</h3></div>
+      <div class="quick-actions-grid">
+        {% for icon, label, prompt in quick_actions %}
+          <form method="POST" action="{{ url_for('chat_widget_send') }}">
+            <input type="hidden" name="next" value="{{ url_for('chatbot_page') }}">
+            <input type="hidden" name="message" value="{{ prompt }}">
+            <button class="qa-btn" type="submit"><span class="qa-icon">{{ icon }}</span>{{ label }}</button>
+          </form>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

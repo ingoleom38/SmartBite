@@ -1,0 +1,81 @@
+{% extends "student/base.html" %}
+{% block title %}Meal Planner — SmartBite{% endblock %}
+{% block page_title %}Meal Planner{% endblock %}
+{% block page_sub %}Build a budget-fitted meal plan around your targets and preferences.{% endblock %}
+{% block content %}
+
+<div class="dash-grid">
+  <div class="card">
+    <h3 style="margin-bottom:16px;">Plan settings</h3>
+    <form method="POST" action="{{ url_for('meal_planner') }}">
+      <div class="field">
+        <label for="days">Plan length</label>
+        <select id="days" name="days">
+          <option value="1" {{ 'selected' if params.days == 1 }}>1 day</option>
+          <option value="3" {{ 'selected' if params.days == 3 }}>3 days</option>
+          <option value="7" {{ 'selected' if params.days == 7 }}>7 days</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="daily_budget">Daily food budget (₹)</label>
+        <input id="daily_budget" type="number" step="1" name="daily_budget" value="{{ params.daily_budget }}" required>
+      </div>
+      <div class="field">
+        <label for="diet">Diet</label>
+        <select id="diet" name="diet">
+          <option value="" {{ 'selected' if not params.diet }}>No preference</option>
+          <option value="veg" {{ 'selected' if params.diet == 'veg' }}>Vegetarian</option>
+          <option value="nonveg" {{ 'selected' if params.diet == 'nonveg' }}>Non-vegetarian</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="max_cook">Cooking access</label>
+        <select id="max_cook" name="max_cook">
+          <option value="" {{ 'selected' if not params.max_cook }}>No limit</option>
+          <option value="none" {{ 'selected' if params.max_cook == 'none' }}>No cooking (hostel room)</option>
+          <option value="basic" {{ 'selected' if params.max_cook == 'basic' }}>Basic (kettle/induction/mess)</option>
+          <option value="full" {{ 'selected' if params.max_cook == 'full' }}>Full kitchen</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="excludes">Exclude foods (comma separated)</label>
+        <input id="excludes" name="excludes" value="{{ params.excludes_text }}" placeholder="e.g. eggs, paneer">
+      </div>
+      <button class="btn btn-primary btn-block" type="submit">Build my plan</button>
+    </form>
+  </div>
+
+  <div>
+    {% if plan_days %}
+      {% for day in plan_days %}
+        <div class="card meal-plan-day">
+          <h4>Day {{ loop.index }}{% if not day.plan %} — couldn't fit this budget{% endif %}</h4>
+          {% if day.plan %}
+            <div class="row-list">
+              {% for meal in day.plan.meals %}
+                <div class="row-item">
+                  <div>
+                    <div class="ri-main">{{ meal.slot|capitalize if meal.slot != 'extra' else 'Extra' }}: {{ meal.name }}</div>
+                    <div class="ri-sub">{{ meal.serving }} · {{ meal.kcal }} kcal · {{ meal.protein }}g protein</div>
+                  </div>
+                  <div class="ri-amount">₹{{ meal.cost }}</div>
+                </div>
+              {% endfor %}
+            </div>
+            <p style="font-size:13px;color:var(--ink-soft);margin-top:12px;">
+              Day total: {{ day.plan.kcal }} kcal · {{ day.plan.protein }}g protein · ₹{{ day.plan.cost }}
+              {% if not day.plan.within_budget %}<span style="color:var(--warn);"> (over your ₹{{ day.plan.budget }} budget — mess meals or bulk dal/rice usually close the gap)</span>{% endif %}
+            </p>
+          {% else %}
+            <p style="color:var(--ink-soft);font-size:13.5px;">Try a slightly higher budget or fewer restrictions.</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+      <p style="font-size:12px;color:var(--ink-faint);">Costs and nutrition values are rough estimates.</p>
+    {% else %}
+      <div class="card empty-state">Set your preferences and build a plan to see it here.</div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

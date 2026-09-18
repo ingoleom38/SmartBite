@@ -1,0 +1,67 @@
+{% extends "student/base.html" %}
+{% block title %}Analytics — SmartBite{% endblock %}
+{% block page_title %}Analytics{% endblock %}
+{% block page_sub %}Trends from your own nutrition and spending history.{% endblock %}
+{% block content %}
+
+<div class="dash-grid">
+  <div class="card">
+    <h3 style="margin-bottom:14px;">Nutrition trend</h3>
+    {% if monthly_nutrition and monthly_nutrition|length > 0 %}
+      <div class="row-list">
+        {% for row in monthly_nutrition %}
+          <div class="row-item">
+            <div><div class="ri-main">{{ row.month }}</div><div class="ri-sub">{{ row.entries }} calculation(s)</div></div>
+            <div><div class="ri-amount">{{ row.avg_calories }} kcal</div><div class="ri-sub" style="text-align:right;">{{ row.avg_protein }}g protein</div></div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">Not enough data yet. <a href="{{ url_for('nutrition') }}">Log a calculation →</a></div>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <h3 style="margin-bottom:14px;">Spending by category (this month)</h3>
+    {% if categories %}
+      {% for c in categories %}
+        <div class="cat-bar-row">
+          <div class="cat-bar-head"><span>{{ c.category }}</span><span class="cat-amt">₹{{ "%.0f"|format(c.total) }}</span></div>
+          <div class="progress-track"><div class="progress-fill" style="width:{{ (c.total / categories[0].total * 100) if categories[0].total else 0 }}%"></div></div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="empty-state">Not enough data yet. <a href="{{ url_for('expenses') }}">Log an expense →</a></div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="card" style="margin-top:20px;">
+  <h3 style="margin-bottom:14px;">Monthly spending comparison</h3>
+  {% if monthly_expenses %}
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Month</th><th>Total spent</th></tr></thead>
+        <tbody>
+          {% for row in monthly_expenses %}
+            <tr><td>{{ row.month }}</td><td>₹{{ "%.0f"|format(row.total) }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="empty-state">Not enough data yet.</div>
+  {% endif %}
+</div>
+
+<div class="card" style="margin-top:20px;">
+  <h3 style="margin-bottom:10px;">This month at a glance</h3>
+  <div class="stat-cards" style="margin-bottom:0;">
+    <div class="card stat-card"><div class="stat-label">Total spent</div><div class="stat-value">₹{{ "%.0f"|format(month_total) }}</div></div>
+    <div class="card stat-card"><div class="stat-label">Week spent</div><div class="stat-value">₹{{ "%.0f"|format(week_total) }}</div></div>
+    <div class="card stat-card"><div class="stat-label">Top category</div><div class="stat-value" style="font-size:18px;">{{ top_category.category if top_category else '—' }}</div></div>
+    <div class="card stat-card"><div class="stat-label">Nutrition logs</div><div class="stat-value">{{ log_count }}</div></div>
+  </div>
+</div>
+
+{% endblock %}

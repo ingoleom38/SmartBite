@@ -1,0 +1,50 @@
+{% extends "student/base.html" %}
+{% block title %}Nutrition — SmartBite{% endblock %}
+{% block page_title %}Nutrition Calculator{% endblock %}
+{% block page_sub %}Mifflin-St Jeor based targets, saved to your history every time you calculate.{% endblock %}
+{% block content %}
+
+<div class="dash-grid">
+  <div class="card">
+    <h3 style="margin-bottom:16px;">Calculate your targets</h3>
+    <form method="POST" action="{{ url_for('nutrition') }}">
+      <div class="field-row">
+        <div class="field"><label for="age">Age</label><input id="age" type="number" name="age" min="14" max="60" value="{{ form_data.age }}" required></div>
+        <div class="field"><label for="gender">Gender</label>
+          <select id="gender" name="gender">
+            <option value="male" {{ 'selected' if form_data.gender == 'male' }}>Male</option>
+            <option value="female" {{ 'selected' if form_data.gender == 'female' }}>Female</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="height">Height (cm)</label><input id="height" type="number" step="0.1" name="height" min="120" max="220" value="{{ form_data.height }}" required></div>
+        <div class="field"><label for="weight">Weight (kg)</label><input id="weight" type="number" step="0.1" name="weight" min="30" max="150" value="{{ form_data.weight }}" required></div>
+      </div>
+      <div class="field">
+        <label for="activity">Activity level</label>
+        <select id="activity" name="activity">
+          <option value="1.2" {{ 'selected' if form_data.activity == 1.2 }}>Sedentary (little/no exercise)</option>
+          <option value="1.375" {{ 'selected' if form_data.activity == 1.375 }}>Light (1-3 days/week)</option>
+          <option value="1.55" {{ 'selected' if form_data.activity == 1.55 }}>Moderate (3-5 days/week)</option>
+          <option value="1.725" {{ 'selected' if form_data.activity == 1.725 }}>Active (6-7 days/week)</option>
+          <option value="1.9" {{ 'selected' if form_data.activity == 1.9 }}>Very active (physical job/training)</option>
+        </select>
+      </div>
+      <button class="btn btn-primary btn-block" type="submit">Calculate</button>
+    </form>
+  </div>
+
+  <div class="card card-glow">
+    <h3 style="margin-bottom:16px;">Your targets</h3>
+    <div class="stat-cards" style="grid-template-columns:1fr 1fr;margin-bottom:0;">
+      <div class="card stat-card"><div class="stat-label">Calories</div><div class="stat-value">{{ result.calories }}</div><div class="stat-sub">kcal / day</div></div>
+      <div class="card stat-card"><div class="stat-label">Protein</div><div class="stat-value">{{ result.protein }}g</div><div class="stat-sub">per day</div></div>
+      <div class="card stat-card"><div class="stat-label">Carbs</div><div class="stat-value">{{ result.carbs }}g</div><div class="stat-sub">per day</div></div>
+      <div class="card stat-card"><div class="stat-label">Fat</div><div class="stat-value">{{ result.fat }}g</div><div class="stat-sub">per day</div></div>
+    </div>
+    <p style="font-size:12.5px;color:var(--ink-faint);margin-top:16px;">Saved to your <a href="{{ url_for('nutrition_history') }}" style="color:var(--orange-light);">nutrition history</a>. These are estimates based on the Mifflin-St Jeor equation.</p>
+  </div>
+</div>
+
+{% endblock %}

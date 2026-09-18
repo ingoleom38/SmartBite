@@ -1,0 +1,29 @@
+{% extends "student/base.html" %}
+{% block title %}Chat History — SmartBite{% endblock %}
+{% block page_title %}Chat History{% endblock %}
+{% block page_sub %}Your full conversation with SmartBite AI, oldest first.{% endblock %}
+{% block topbar_actions %}
+  <form method="POST" action="{{ url_for('chatbot_clear') }}" onsubmit="return confirm('Clear your entire chat history? This cannot be undone.');">
+    <button class="btn btn-danger btn-sm" type="submit">Clear all history</button>
+  </form>
+{% endblock %}
+{% block content %}
+
+<div class="card">
+  {% if history %}
+    <div class="row-list" style="gap:2px;">
+      {% for msg in history %}
+        <div class="chat-row {{ msg.sender }}" style="margin-bottom:14px;">
+          <div>
+            <div class="chat-bubble {{ msg.sender }}">{{ msg.message }}</div>
+            <div style="font-size:11px;color:var(--ink-faint);margin-top:4px;{{ 'text-align:right;' if msg.sender == 'user' }}">{{ msg.created_at }}</div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-state">No conversation yet. <a href="{{ url_for('chatbot_page') }}">Start chatting with SmartBite AI →</a></div>
+  {% endif %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}SmartBite{% endblock %}</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22><text y=%22.9em%22 font-size=%2220%22>🍊</text></svg>">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+</head>
+<body class="auth-body">
+{% include "_flashes.html" %}
+<div class="auth-shell">
+  <div class="auth-side">
+    <a class="brand" href="{{ url_for('home') }}"><span class="brand-mark">🍊</span> SmartBite</a>
+    <div>
+      <h2>{% block side_heading %}Eat better. Spend smarter.{% endblock %}</h2>
+      <p>{% block side_sub %}A nutrition and budget assistant built for hostel and PG life.{% endblock %}</p>
+      <ul>
+        <li><span>✓</span> Real calorie &amp; protein targets</li>
+        <li><span>✓</span> Budget-aware meal planning</li>
+        <li><span>✓</span> AI assistant that knows your numbers</li>
+      </ul>
+    </div>
+    <span style="font-size:12px;color:var(--ink-faint);position:relative;z-index:1;">G H Raisoni College &middot; Department of Data Science</span>
+  </div>
+  <div class="auth-form-side">
+    {% block form_content %}{% endblock %}
+  </div>
+</div>
+</body>
+</html>

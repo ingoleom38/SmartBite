@@ -1,0 +1,14 @@
+{% extends "auth/base.html" %}
+{% block title %}Verify OTP — SmartBite{% endblock %}
+{% block form_content %}
+<h1>Enter your OTP</h1>
+<p class="sub">We sent a 6-digit code to <strong>{{ email }}</strong>. It expires in 5 minutes.</p>
+<form method="POST" action="{{ url_for('verify_otp') }}">
+  <div class="field">
+    <label for="otp">6-digit code</label>
+    <input id="otp" class="otp-input" name="otp" maxlength="6" pattern="\d{6}" required autofocus>
+  </div>
+  <button class="btn btn-primary btn-block" type="submit">Verify</button>
+</form>
+<p class="foot-link">Didn't get it? <a href="{{ url_for('forgot_password') }}">Send again</a></p>
+{% endblock %}

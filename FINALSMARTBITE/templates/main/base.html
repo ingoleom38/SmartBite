@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}SmartBite — Eat Better. Spend Smarter.{% endblock %}</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22><text y=%22.9em%22 font-size=%2220%22>🍊</text></svg>">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+
+{% include "_flashes.html" %}
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="{{ url_for('home') }}">
+      <span class="brand-mark">🍊</span> SmartBite
+    </a>
+    <nav class="header-nav">
+      <a href="{{ url_for('home') }}" class="{{ 'active' if request.endpoint == 'home' }}">Home</a>
+      <a href="{{ url_for('about') }}" class="{{ 'active' if request.endpoint == 'about' }}">About</a>
+      <a href="{{ url_for('features') }}" class="{{ 'active' if request.endpoint == 'features' }}">Features</a>
+      <a href="{{ url_for('how_it_works') }}" class="{{ 'active' if request.endpoint == 'how_it_works' }}">How It Works</a>
+      <a href="{{ url_for('contact') }}" class="{{ 'active' if request.endpoint == 'contact' }}">Contact</a>
+    </nav>
+    <div class="header-actions">
+      {% if session.student_id %}
+        <span class="header-user-name">Hi, {{ session.student_name.split(' ')[0] }}</span>
+        <a class="btn btn-soft btn-sm" href="{{ url_for('dashboard') }}">Dashboard</a>
+      {% else %}
+        <a class="btn-ghost btn btn-sm" href="{{ url_for('login') }}">Log in</a>
+        <a class="btn btn-primary btn-sm" href="{{ url_for('register') }}">Get started</a>
+      {% endif %}
+    </div>
+  </div>
+</header>
+
+{% block content %}{% endblock %}
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="brand"><span class="brand-mark">🍊</span> SmartBite</div>
+        <p>A student nutrition and budget assistant built as a Data Science department project at G H Raisoni College of Engineering and Management.</p>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h4>Project</h4>
+          <a href="{{ url_for('features') }}">Features</a>
+          <a href="{{ url_for('how_it_works') }}">How it works</a>
+          <a href="{{ url_for('register') }}">Get started</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="{{ url_for('about') }}">About</a>
+          <a href="{{ url_for('contact') }}">Contact</a>
+          <a href="{{ url_for('login') }}">Log in</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 SmartBite &mdash; Department of Data Science, G H Raisoni College of Engineering and Management</span>
+      <span>Guide: Samadhan Mandpe</span>
+    </div>
+  </div>
+</footer>
+
+{% if session.student_id %}{% include "student/_chat_widget.html" %}{% endif %}
+</body>
+</html>

@@ -1,0 +1,43 @@
+{% extends "main/base.html" %}
+{% block title %}How It Works — SmartBite{% endblock %}
+{% block content %}
+<section class="simple-page">
+  <div class="wrap">
+    <span class="kicker">Under the hood</span>
+    <h1>How SmartBite actually works</h1>
+    <p class="lede">No magic, no dummy numbers, just your data flowing through a few clear steps.</p>
+
+    <div class="steps" style="margin-bottom:60px;">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h4>Register</h4>
+        <p>Your profile (age, height, weight, daily budget) is saved once, hashed password included.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h4>Calculate</h4>
+        <p>Nutrition targets are computed in Python and logged to MySQL every time you run the calculator.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h4>Track</h4>
+        <p>Expenses you add are aggregated in SQL, monthly totals and category splits, no manual maths.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h4>Ask</h4>
+        <p>SmartBite AI builds a context object from your own rows, then answers, using the OpenAI API for open-ended reasoning and plain Python for anything the database can already answer exactly.</p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:24px;">
+      <h3 style="margin-bottom:12px;">Why some answers skip the AI entirely</h3>
+      <p style="color:var(--ink-soft);font-size:14.5px;">"How much have I spent this month?" doesn't need a language model, it needs one SQL query. SmartBite calculates totals, remaining budget and targets directly in Python/SQL, and only calls the OpenAI API for natural conversation, meal planning reasoning and open-ended questions. That keeps answers to data questions exact and instant.</p>
+    </div>
+    <div class="card">
+      <h3 style="margin-bottom:12px;">What happens if the AI service is unavailable</h3>
+      <p style="color:var(--ink-soft);font-size:14.5px;">If the OpenAI API fails or times out, SmartBite falls back to its own rule-based engine for budget, protein, calorie and basic meal questions, so the app never shows an error or a blank reply.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

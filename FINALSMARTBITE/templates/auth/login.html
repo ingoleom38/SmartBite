@@ -1,0 +1,22 @@
+{% extends "auth/base.html" %}
+{% block title %}Log in — SmartBite{% endblock %}
+{% block side_heading %}Welcome back.{% endblock %}
+{% block form_content %}
+<h1>Log in</h1>
+<p class="sub">Pick up right where you left off.</p>
+<form method="POST" action="{{ url_for('login') }}">
+  <div class="field">
+    <label for="email">Email</label>
+    <input id="email" type="email" name="email" value="{{ email or '' }}" required autofocus>
+  </div>
+  <div class="field">
+    <label for="password">Password</label>
+    <input id="password" type="password" name="password" required>
+  </div>
+  <div class="checkbox-row" style="justify-content:flex-end;">
+    <a href="{{ url_for('forgot_password') }}" style="color:var(--orange-light);font-weight:600;">Forgot password?</a>
+  </div>
+  <button class="btn btn-primary btn-block" type="submit">Log in</button>
+</form>
+<p class="foot-link">Don't have an account? <a href="{{ url_for('register') }}">Register</a></p>
+{% endblock %}

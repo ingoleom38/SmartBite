@@ -1,0 +1,217 @@
+{% extends "main/base.html" %}
+{% block title %}SmartBite — Eat Better. Spend Smarter.{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <span class="badge hero-eyebrow">🎓 Built for Indian college students</span>
+      <h1>Eat Better.<br><span>Spend Smarter.</span></h1>
+      <p class="hero-sub">SmartBite pairs a real nutrition calculator with expense tracking and an AI assistant that actually knows your budget, your targets and your history — so every meal suggestion is grounded in your own numbers, not a guess.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="{{ url_for('register') }}">Start Your Journey</a>
+        <a class="btn btn-ghost" href="{{ url_for('features') }}">Explore Features</a>
+      </div>
+      <p class="hero-note">Free for students. No credit card, just a college email.</p>
+    </div>
+    <div class="hero-card">
+      <div class="hero-card-head">
+        <strong>Today's overview</strong>
+        <span>Sample</span>
+      </div>
+      <div class="hero-stat-grid">
+        <div class="hero-stat"><div class="num">2,180</div><div class="lbl">Calorie target</div></div>
+        <div class="hero-stat"><div class="num">92g</div><div class="lbl">Protein target</div></div>
+        <div class="hero-stat"><div class="num">₹1,750</div><div class="lbl">Spent this month</div></div>
+        <div class="hero-stat"><div class="num">₹1,250</div><div class="lbl">Remaining</div></div>
+      </div>
+      <div class="hero-bar-row"><span>Budget used</span></div>
+      <div class="progress-track"><div class="progress-fill" style="width:58%"></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">The problem</span>
+      <h2>Healthy eating and student budgets don't usually get along</h2>
+      <p>Hostel food is inconsistent, mess timings don't match class schedules, and tracking spending gets abandoned within a week of a notes-app attempt.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card feature-card">
+        <div class="feature-icon">🍽️</div>
+        <h3>Nutrition is a guess</h3>
+        <p>Most students have no idea what their calorie or protein target actually is, let alone whether their meals hit it.</p>
+      </div>
+      <div class="card feature-card">
+        <div class="feature-icon">💸</div>
+        <h3>Money disappears fast</h3>
+        <p>Between mess fees, canteen runs and late-night orders, food spending is the easiest budget to lose track of.</p>
+      </div>
+      <div class="card feature-card">
+        <div class="feature-icon">📱</div>
+        <h3>Generic apps don't fit</h3>
+        <p>Mainstream nutrition apps assume a kitchen, a gym membership and prices that don't match hostel life.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">The solution</span>
+      <h2>One dashboard for your food, your budget and your targets</h2>
+      <p>SmartBite calculates real nutrition targets, tracks real spending, and layers an AI assistant on top that reasons over both.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card feature-card">
+        <div class="feature-icon">🧮</div>
+        <h3>Nutrition calculator</h3>
+        <p>Mifflin-St Jeor based calorie, protein, carb and fat targets from your age, height, weight and activity level.</p>
+      </div>
+      <div class="card feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Expense tracking</h3>
+        <p>Log every rupee spent on food by category and watch monthly totals build automatically, no spreadsheets.</p>
+      </div>
+      <div class="card feature-card">
+        <div class="feature-icon">🧠</div>
+        <h3>Budget intelligence</h3>
+        <p>Daily and monthly budgets, remaining balance, projected overspend, all calculated live from your own data.</p>
+      </div>
+      <div class="card feature-card">
+        <div class="feature-icon">🤖</div>
+        <h3>AI nutrition assistant</h3>
+        <p>SmartBite AI knows your targets and spending, and answers naturally, no rigid forms or menus.</p>
+      </div>
+      <div class="card feature-card">
+        <div class="feature-icon">🗓️</div>
+        <h3>Personalized meal planning</h3>
+        <p>Ask for a day or a week of meals within your budget, diet and cooking access, and get one instantly.</p>
+      </div>
+      <div class="card feature-card">
+        <div class="feature-icon">🛒</div>
+        <h3>Grocery planning</h3>
+        <p>Turn a weekly budget into a concrete shopping list of practical, affordable Indian staples.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">How SmartBite works</span>
+      <h2>From sign-up to your first personalized plan</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h4>Create your profile</h4>
+        <p>Age, height, weight and a daily food budget, that's all it takes to get started.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h4>Get your targets</h4>
+        <p>SmartBite calculates your calorie, protein, carb and fat targets instantly.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h4>Log your spending</h4>
+        <p>Add expenses as you go, SmartBite tracks totals and categories automatically.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h4>Ask SmartBite AI</h4>
+        <p>Get meal plans, substitutions and budget answers grounded in your real data.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">AI assistant showcase</span>
+      <h2>A conversation that remembers context</h2>
+      <p>SmartBite AI tracks the thread, so a follow-up like "make it cheaper" or "no eggs" refines the last answer instead of starting over.</p>
+    </div>
+    <div class="chat-demo">
+      <div class="chat-row user"><div class="chat-bubble user">I want to gain muscle. Give me a cheap breakfast.</div></div>
+      <div class="chat-row bot"><div class="chat-bubble bot">Try egg bhurji with 2 roti — about 480 kcal, 24g protein, ₹45. Want it cheaper or without eggs?</div></div>
+      <div class="chat-row user"><div class="chat-bubble user">No eggs, make it cheaper.</div></div>
+      <div class="chat-row bot"><div class="chat-bubble bot">Poha with peanuts, ~380 kcal, 9g protein, ₹20. A glass of milk on the side adds 8g protein for ₹15 more.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">Sample budget-friendly meals</span>
+      <h2>Real Indian student food, real prices</h2>
+    </div>
+    <div class="grid-3">
+      <div class="card">
+        <div class="meal-card">
+          <div><div class="name">Dal, rice and sabzi</div><div class="meta">620 kcal · 20g protein</div></div>
+          <div class="price">₹45</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="meal-card">
+          <div><div class="name">Rajma with rice and salad</div><div class="meta">650 kcal · 24g protein</div></div>
+          <div class="price">₹55</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="meal-card">
+          <div><div class="name">Moong dal khichdi</div><div class="meta">520 kcal · 18g protein</div></div>
+          <div class="price">₹30</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="stat-strip">
+      <div><div class="num">4</div><div class="lbl">Core modules</div></div>
+      <div><div class="num">50+</div><div class="lbl">Foods in the knowledge base</div></div>
+      <div><div class="num">100%</div><div class="lbl">Server-side, no tracking scripts</div></div>
+      <div><div class="num">0</div><div class="lbl">Fake dashboard numbers</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">Technology</span>
+      <h2>Simple, dependable stack</h2>
+    </div>
+    <div class="tech-row">
+      <span class="tech-pill">Flask</span>
+      <span class="tech-pill">MySQL</span>
+      <span class="tech-pill">Python</span>
+      <span class="tech-pill">OpenAI API</span>
+      <span class="tech-pill">Server-rendered HTML/CSS</span>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="wrap">
+    <h2>Ready to eat better and spend smarter?</h2>
+    <p>Set up your profile in under a minute and get your first nutrition target immediately.</p>
+    <div class="cta-actions">
+      <a class="btn btn-primary" href="{{ url_for('register') }}">Create your account</a>
+      <a class="btn btn-ghost" href="{{ url_for('login') }}">I already have one</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

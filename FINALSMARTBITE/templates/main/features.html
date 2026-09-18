@@ -1,0 +1,59 @@
+{% extends "main/base.html" %}
+{% block title %}Features — SmartBite{% endblock %}
+{% block content %}
+<section class="simple-page">
+  <div class="wrap">
+    <span class="kicker">Everything inside SmartBite</span>
+    <h1>Features built around real student life</h1>
+    <p class="lede">Every module below feeds the same student dashboard, and the same AI assistant, so nothing works in isolation.</p>
+
+    <div class="grid-2">
+      <div class="card feature-card">
+        <div class="feature-icon">🧮</div>
+        <h3>Nutrition calculator</h3>
+        <p>Enter age, gender, height, weight and activity level to get calorie, protein, carb and fat targets using the Mifflin-St Jeor formula, logged automatically so you can track it over time.</p>
+      </div>
+      <div class="card feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Expense tracking</h3>
+        <p>Log food expenses by category (mess, canteen, groceries, eating out, snacks) with a note and date. Monthly totals and category breakdowns are computed straight from MySQL.</p>
+      </div>
+      <div class="card feature-card">
+        <div class="feature-icon">💰</div>
+        <h3>Budget intelligence</h3>
+        <p>Set a daily food budget and SmartBite works out your monthly budget, remaining balance, days left, and whether your current pace will put you over budget by month end.</p>
+      </div>
+      <div class="card feature-card">
+        <div class="feature-icon">🤖</div>
+        <h3>AI nutrition assistant</h3>
+        <p>SmartBite AI understands natural follow-ups ("make it cheaper", "no eggs") and always answers budget and nutrition questions from your real database numbers, never a guess.</p>
+      </div>
+      <div class="card feature-card">
+        <div class="feature-icon">🗓️</div>
+        <h3>Personalized meal planning</h3>
+        <p>Ask for a 1, 3 or 7-day plan built around your calorie/protein target, budget, diet preference and cooking access (no kitchen, induction only, or full kitchen).</p>
+      </div>
+      <div class="card feature-card">
+        <div class="feature-icon">🛒</div>
+        <h3>Grocery planning</h3>
+        <p>Turn any weekly budget into a shopping list of practical items with estimated prices, built to stay within what you asked to spend.</p>
+      </div>
+      <div class="card feature-card">
+        <div class="feature-icon">🔁</div>
+        <h3>Food substitutions</h3>
+        <p>"Replace eggs" or "cheaper alternative to chicken" returns options matched on protein, calories, cost and availability, not just a random swap.</p>
+      </div>
+      <div class="card feature-card">
+        <div class="feature-icon">📈</div>
+        <h3>Nutrition &amp; expense analytics</h3>
+        <p>Trends for calorie and protein targets, monthly spending by category, and averages, all real, with an honest "not enough data yet" when history is thin.</p>
+      </div>
+      <div class="card feature-card">
+        <div class="feature-icon">💬</div>
+        <h3>Chat history</h3>
+        <p>Every conversation is saved per student and fully isolated, one student can never see another's messages, budget or nutrition data.</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "main/base.html" %}
+{% block title %}About SmartBite{% endblock %}
+{% block content %}
+<section class="simple-page">
+  <div class="wrap">
+    <span class="kicker">About the project</span>
+    <h1>Why we built SmartBite</h1>
+    <p class="lede">SmartBite started as a Data Science department project with one question: why do so few tools understand that a student's food choices are constrained by both nutrition and money at the same time?</p>
+
+    <div class="contact-grid">
+      <div>
+        <div class="card" style="margin-bottom:22px;">
+          <h3 style="margin-bottom:10px;">Our approach</h3>
+          <p style="color:var(--ink-soft);font-size:14.5px;">Instead of treating nutrition and budgeting as separate apps, SmartBite calculates real targets, tracks real spending, and connects the two through an AI assistant that reasons over your actual numbers, never invented ones.</p>
+        </div>
+        <div class="card">
+          <h3 style="margin-bottom:10px;">Who it's for</h3>
+          <p style="color:var(--ink-soft);font-size:14.5px;">Hostel and PG students juggling mess timings, canteen prices and a fixed monthly allowance, who want to eat well without spending hours planning it.</p>
+        </div>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom:14px;">Project details</h3>
+        <div class="row-list">
+          <div class="row-item"><div class="ri-main">Department</div><div class="ri-sub">Data Science, G H Raisoni College of Engineering and Management</div></div>
+          <div class="row-item"><div class="ri-main">Guide</div><div class="ri-sub">Samadhan Mandpe</div></div>
+          <div class="row-item"><div class="ri-main">Team</div><div class="ri-sub">Vedant Sonune, Gulshan Nimbarte, Om Ingole, Krupa Bawankar</div></div>
+          <div class="row-item"><div class="ri-main">Stack</div><div class="ri-sub">Flask, MySQL, OpenAI API</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

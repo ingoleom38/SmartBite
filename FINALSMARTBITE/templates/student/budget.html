@@ -1,0 +1,45 @@
+{% extends "student/base.html" %}
+{% block title %}Budget — SmartBite{% endblock %}
+{% block page_title %}Budget{% endblock %}
+{% block page_sub %}How your spending is tracking against your daily budget.{% endblock %}
+{% block content %}
+
+{% if budget %}
+<div class="stat-cards">
+  <div class="card stat-card"><div class="stat-label">Daily budget</div><div class="stat-value">₹{{ "%.0f"|format(budget.daily_budget) }}</div></div>
+  <div class="card stat-card"><div class="stat-label">Monthly budget</div><div class="stat-value">₹{{ "%.0f"|format(budget.month_budget) }}</div></div>
+  <div class="card stat-card"><div class="stat-label">Spent this month</div><div class="stat-value">₹{{ "%.0f"|format(budget.month_total) }}</div></div>
+  <div class="card stat-card"><div class="stat-label">Remaining</div><div class="stat-value" style="color:{{ 'var(--bad)' if budget.over_budget else 'var(--ink)' }};">₹{{ "%.0f"|format(budget.remaining) }}</div></div>
+</div>
+
+<div class="card" style="margin-bottom:20px;">
+  <div class="cat-bar-row">
+    <div class="cat-bar-head"><span>Month progress ({{ budget.days_elapsed }}/{{ budget.days_in_month }} days)</span><span class="cat-amt">{{ ((budget.month_total / budget.month_budget * 100) if budget.month_budget else 0)|round(1) }}%</span></div>
+    <div class="progress-track"><div class="progress-fill {{ 'bad' if budget.over_budget }}" style="width:{{ [(budget.month_total / budget.month_budget * 100) if budget.month_budget else 0, 100]|min }}%"></div></div>
+  </div>
+  <p style="font-size:13.5px;color:var(--ink-soft);">
+    Averaging ₹{{ "%.0f"|format(budget.avg_per_day) }}/day. At this rate you're projected to spend ₹{{ "%.0f"|format(budget.projected_month) }} this month
+    {% if budget.projected_over %}<span style="color:var(--bad);font-weight:600;"> — that's over your budget.</span>{% else %}<span style="color:var(--good);font-weight:600;"> — within budget.</span>{% endif %}
+  </p>
+  <p style="font-size:13.5px;color:var(--ink-soft);margin-top:8px;">To stay within budget for the rest of the month, keep spending at or below ₹{{ "%.0f"|format(budget.safe_daily) }}/day.</p>
+</div>
+{% else %}
+<div class="card empty-state">You haven't set a daily budget yet. <a href="{{ url_for('profile') }}">Set one on your profile</a> to unlock budget tracking.</div>
+{% endif %}
+
+<div class="card">
+  <h3 style="margin-bottom:16px;">Update your daily budget</h3>
+  <form method="POST" action="{{ url_for('profile') }}" style="max-width:320px;">
+    <input type="hidden" name="form" value="profile">
+    <input type="hidden" name="full_name" value="{{ student.full_name }}">
+    <input type="hidden" name="gender" value="{{ student.gender }}">
+    <input type="hidden" name="age" value="{{ student.age }}">
+    <input type="hidden" name="height" value="{{ student.height_cm }}">
+    <input type="hidden" name="weight" value="{{ student.weight_kg }}">
+    <input type="hidden" name="diet_preference" value="{{ student.diet_preference or '' }}">
+    <div class="field"><label for="daily_budget">Daily food budget (₹)</label><input id="daily_budget" type="number" step="1" name="daily_budget" value="{{ student.daily_budget or '' }}" required></div>
+    <button class="btn btn-primary" type="submit">Save</button>
+  </form>
+</div>
+
+{% endblock %}
