@@ -70,7 +70,16 @@ app.config["MYSQL_HOST"] = os.environ.get("MYSQL_HOST", "")
 app.config["MYSQL_USER"] = os.environ.get("MYSQL_USER", "")
 app.config["MYSQL_PASSWORD"] = os.environ.get("MYSQL_PASSWORD", "")
 app.config["MYSQL_DB"] = os.environ.get("MYSQL_DB", "")
+app.config["MYSQL_PORT"] = int(os.environ.get("MYSQL_PORT", "3306"))
 app.config["MYSQL_CURSORCLASS"] = "DictCursor"  # rows come back as dicts
+
+# Managed MySQL hosts (Aiven, PlanetScale, etc.) require SSL. If a CA
+# certificate file is present (ca.pem in the project root, or a path given
+# via MYSQL_SSL_CA), tell mysqlclient to use it. Locally against a plain
+# MySQL install with no SSL cert, this block is simply skipped.
+_ssl_ca_path = os.environ.get("MYSQL_SSL_CA", os.path.join(os.path.dirname(os.path.abspath(__file__)), "ca.pem"))
+if os.path.exists(_ssl_ca_path):
+    app.config["MYSQL_CUSTOM_OPTIONS"] = {"ssl": {"ca": _ssl_ca_path}}
 
 # Gmail SMTP, for the forgot-password OTP (see the Email section below).
 # MAIL_PASSWORD must be a Gmail App Password (myaccount.google.com/apppasswords
